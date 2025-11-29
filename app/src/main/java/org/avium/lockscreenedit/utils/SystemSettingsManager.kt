@@ -23,14 +23,14 @@ import android.util.Log
 
 object SystemSettingsManager {
 
-    private const val TAG = "AVIUM_LOCKSCREEN"
+    private const val TAG = "MIST_LOCKSCREEN"
 
-    private const val PROP_ENABLED = "persist.avium.customlockscreen.enable"
-    private const val PROP_TYPE = "persist.avium.customlockscreen.type"
-    private const val PROP_COLOR = "persist.avium.customlockscreen.color"
-    private const val PROP_HOUR_COLOR = "persist.avium.customlockscreen.hour.color"
-    private const val PROP_MINUTE_COLOR = "persist.avium.customlockscreen.minute.color"
-    private const val ACTION_SETTINGS_CHANGED = "org.avium.systemui.lockscreen.SETTINGS_CHANGED"
+    private const val PROP_ENABLED = "persist.mist.customlockscreen.enable"
+    private const val PROP_TYPE = "persist.mist.customlockscreen.type"
+    private const val PROP_COLOR = "persist.mist.customlockscreen.color"
+    private const val PROP_HOUR_COLOR = "persist.mist.customlockscreen.hour.color"
+    private const val PROP_MINUTE_COLOR = "persist.mist.customlockscreen.minute.color"
+    private const val ACTION_SETTINGS_CHANGED = "org.mist.systemui.lockscreen.SETTINGS_CHANGED"
 
     fun setEnabled(enabled: Boolean) {
         Log.d(TAG, "Setting lockscreen enabled to: $enabled")

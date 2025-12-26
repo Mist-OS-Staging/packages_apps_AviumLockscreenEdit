@@ -16,6 +16,7 @@
 
 package org.avium.lockscreenedit.edit
 
+import android.app.WallpaperManager
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -41,10 +42,13 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.pointer.pointerInput
@@ -58,9 +62,12 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import org.avium.lockscreenedit.R
 import org.avium.lockscreenedit.viewmodel.LockscreenViewModel
 import kotlin.random.Random
@@ -112,13 +119,9 @@ fun LockscreenEditScreen(
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
-        Image(
-            painter = painterResource(id = R.drawable.setting_bg),
-            contentDescription = null,
-            modifier = Modifier.fillMaxSize(),
-            contentScale = ContentScale.Crop
-        )
-        
+
+        CurrentWallpaperDisplay()
+
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -551,6 +554,37 @@ private fun BlurClockDialog(
                     }
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun CurrentWallpaperDisplay() {
+    val context = LocalContext.current
+    var wallpaperBitmap by remember { mutableStateOf<ImageBitmap?>(null) }
+
+    LaunchedEffect(Unit) {
+        withContext(Dispatchers.IO) {
+            val wallpaperManager = WallpaperManager.getInstance(context)
+
+            val drawable = wallpaperManager.drawable
+
+            if (drawable != null) {
+                wallpaperBitmap = drawable.toBitmap().asImageBitmap()
+            }
+        }
+    }
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        if (wallpaperBitmap != null) {
+            Image(
+                bitmap = wallpaperBitmap!!,
+                contentDescription = "System Wallpaper",
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Crop
+            )
+        } else {
+            CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
         }
     }
 }
